@@ -1,5 +1,6 @@
 # Домашний сервер: приложение слушает на Tailscale-адресе, TLS терминирует edge-прокси (infra/edge.Caddyfile).
 #   docker compose -f infra/docker-compose.yml up -d --build
+name: max-chat
 services:
   web:
     build:
