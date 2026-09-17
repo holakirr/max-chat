@@ -10,6 +10,14 @@
 
 Демо: **https://max.holakirr.com**
 
+## Скриншоты
+
+| Вход | Чаты | Переписка |
+|---|---|---|
+| ![Вход](docs/screenshots/01-login.png) | ![Чаты](docs/screenshots/02-chats.png) | ![Переписка](docs/screenshots/03-chat.png) |
+
+Мобильная раскладка: [список чатов](docs/screenshots/04-mobile-chats.png), [чат](docs/screenshots/05-mobile-chat.png).
+
 ## Как пользоваться
 
 1. Создайте инстанс MAX в [консоли GREEN-API](https://console.green-api.com) и авторизуйте его по QR-коду.
