@@ -1,0 +1,11 @@
+# Блок для Caddy на edge-сервере (по образцу backgammon.holakirr.com):
+# TLS терминируется здесь, трафик уходит на домашний сервер по Tailscale.
+https://max.holakirr.com:9443 {
+	bind 127.0.0.1
+	encode zstd gzip
+	reverse_proxy 100.104.231.20:3300 {
+		transport http {
+			dial_timeout 10s
+		}
+	}
+}

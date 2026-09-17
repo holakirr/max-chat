@@ -1,0 +1,10 @@
+# Домашний сервер: приложение слушает на Tailscale-адресе, TLS терминирует edge-прокси (infra/edge.Caddyfile).
+#   docker compose -f infra/docker-compose.yml up -d --build
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${BIND:-127.0.0.1:3300}:80"
