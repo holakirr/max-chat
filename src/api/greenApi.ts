@@ -2,71 +2,71 @@
 // Методы: https://green-api.com/v3/docs/api/
 
 export interface Credentials {
-  idInstance: string
-  apiTokenInstance: string
-  apiUrl: string
+  idInstance: string;
+  apiTokenInstance: string;
+  apiUrl: string;
 }
 
-export const DEFAULT_API_URL = 'https://api.green-api.com'
+export const DEFAULT_API_URL = 'https://api.green-api.com';
 
 export interface InstanceSettings {
-  webhookUrl?: string
-  incomingWebhook?: 'yes' | 'no'
-  outgoingWebhook?: 'yes' | 'no'
-  outgoingMessageWebhook?: 'yes' | 'no'
-  outgoingAPIMessageWebhook?: 'yes' | 'no'
-  stateWebhook?: 'yes' | 'no'
+  webhookUrl?: string;
+  incomingWebhook?: 'yes' | 'no';
+  outgoingWebhook?: 'yes' | 'no';
+  outgoingMessageWebhook?: 'yes' | 'no';
+  outgoingAPIMessageWebhook?: 'yes' | 'no';
+  stateWebhook?: 'yes' | 'no';
 }
 
 export interface ReceivedNotification {
-  receiptId: number
-  body: NotificationBody
+  receiptId: number;
+  body: NotificationBody;
 }
 
 // Минимальная форма уведомления, которая нужна приложению.
 // Формат: https://green-api.com/v3/docs/api/receiving/notifications-format/
 export interface NotificationBody {
-  typeWebhook: string
-  timestamp?: number
-  idMessage?: string
-  stateInstance?: string
-  status?: string
+  typeWebhook: string;
+  timestamp?: number;
+  idMessage?: string;
+  stateInstance?: string;
+  status?: string;
   senderData?: {
-    chatId?: string
-    chatName?: string
-    sender?: string
-    senderName?: string
-    senderContactName?: string
-    senderPhoneNumber?: number | string
-  }
+    chatId?: string;
+    chatName?: string;
+    sender?: string;
+    senderName?: string;
+    senderContactName?: string;
+    senderPhoneNumber?: number | string;
+  };
   messageData?: {
-    typeMessage?: string
-    textMessageData?: { textMessage?: string }
-    extendedTextMessageData?: { text?: string }
-  }
+    typeMessage?: string;
+    textMessageData?: { textMessage?: string };
+    extendedTextMessageData?: { text?: string };
+  };
 }
 
 export class GreenApiError extends Error {
-  status: number
+  status: number;
   constructor(status: number, message: string) {
-    super(message)
-    this.status = status
+    super(message);
+    this.status = status;
   }
 }
 
 async function readError(res: Response): Promise<string> {
-  const text = await res.text().catch(() => '')
+  const text = await res.text().catch(() => '');
   try {
-    const json = JSON.parse(text) as { message?: string; error?: string }
-    return json.message ?? json.error ?? text
+    const json = JSON.parse(text) as { message?: string; error?: string };
+    return json.message ?? json.error ?? text;
   } catch {
-    return text || res.statusText
+    return text || res.statusText;
   }
 }
 
 export function createClient(creds: Credentials) {
-  const base = `${creds.apiUrl.replace(/\/+$/, '')}/waInstance${creds.idInstance.trim()}`
-  const token = creds.apiTokenInstance.trim()
+  const base = `${creds.apiUrl.replace(/\/+$/, '')}/waInstance${creds.idInstance.trim()}`;
+  const token = creds.apiTokenInstance.trim();
 
   async function request<T>(method: string, path: string, body?: unknown, signal?: AbortSignal): Promise<T | null> {
     const res = await fetch(`${base}/${path}`, {
@@ -74,11 +74,11 @@ export function createClient(creds: Credentials) {
       headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined,
       signal,
-    })
-    if (!res.ok) throw new GreenApiError(res.status, await readError(res))
-    const text = await res.text()
-    if (!text || text === 'null') return null
-    return JSON.parse(text) as T
+    });
+    if (!res.ok) throw new GreenApiError(res.status, await readError(res));
+    const text = await res.text();
+    if (!text || text === 'null') return null;
+    return JSON.parse(text) as T;
   }
 
   return {
@@ -98,12 +98,17 @@ export function createClient(creds: Credentials) {
 
     // https://green-api.com/v3/docs/api/receiving/technology-http-api/ReceiveNotification/
     receiveNotification: (receiveTimeout: number, signal?: AbortSignal) =>
-      request<ReceivedNotification>('GET', `receiveNotification/${token}?receiveTimeout=${receiveTimeout}`, undefined, signal),
+      request<ReceivedNotification>(
+        'GET',
+        `receiveNotification/${token}?receiveTimeout=${receiveTimeout}`,
+        undefined,
+        signal,
+      ),
 
     // https://green-api.com/v3/docs/api/receiving/technology-http-api/DeleteNotification/
     deleteNotification: (receiptId: number) =>
       request<{ result: boolean }>('DELETE', `deleteNotification/${token}/${receiptId}`),
-  }
+  };
 }
 
-export type GreenApiClient = ReturnType<typeof createClient>
+export type GreenApiClient = ReturnType<typeof createClient>;

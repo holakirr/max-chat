@@ -1,25 +1,29 @@
-import { useState } from 'react'
-import type { FormEvent } from 'react'
-import { DEFAULT_API_URL } from '../api/greenApi'
-import type { Credentials } from '../api/greenApi'
-import { Logo } from './Icons'
+import { useState } from 'react';
+import type { FormEvent } from 'react';
+import { DEFAULT_API_URL } from '../api/greenApi';
+import type { Credentials } from '../api/greenApi';
+import { Logo } from './Icons';
 
 interface Props {
-  initial: Credentials | null
-  busy: boolean
-  error: string | null
-  onSubmit: (creds: Credentials) => void
+  initial: Credentials | null;
+  busy: boolean;
+  error: string | null;
+  onSubmit: (creds: Credentials) => void;
 }
 
 export function Login({ initial, busy, error, onSubmit }: Props) {
-  const [idInstance, setIdInstance] = useState(initial?.idInstance ?? '')
-  const [apiTokenInstance, setApiTokenInstance] = useState(initial?.apiTokenInstance ?? '')
-  const [apiUrl, setApiUrl] = useState(initial?.apiUrl ?? DEFAULT_API_URL)
+  const [idInstance, setIdInstance] = useState(initial?.idInstance ?? '');
+  const [apiTokenInstance, setApiTokenInstance] = useState(initial?.apiTokenInstance ?? '');
+  const [apiUrl, setApiUrl] = useState(initial?.apiUrl ?? DEFAULT_API_URL);
 
   const submit = (e: FormEvent) => {
-    e.preventDefault()
-    onSubmit({ idInstance: idInstance.trim(), apiTokenInstance: apiTokenInstance.trim(), apiUrl: apiUrl.trim() || DEFAULT_API_URL })
-  }
+    e.preventDefault();
+    onSubmit({
+      idInstance: idInstance.trim(),
+      apiTokenInstance: apiTokenInstance.trim(),
+      apiUrl: apiUrl.trim() || DEFAULT_API_URL,
+    });
+  };
 
   return (
     <div className="login">
@@ -43,7 +47,7 @@ export function Login({ initial, busy, error, onSubmit }: Props) {
             autoComplete="username"
             placeholder="3100000001"
             value={idInstance}
-            onChange={e => setIdInstance(e.target.value)}
+            onChange={(e) => setIdInstance(e.target.value)}
             required
           />
         </label>
@@ -55,7 +59,7 @@ export function Login({ initial, busy, error, onSubmit }: Props) {
             autoComplete="current-password"
             placeholder="d75b3a66374942c5b3c019c6…"
             value={apiTokenInstance}
-            onChange={e => setApiTokenInstance(e.target.value)}
+            onChange={(e) => setApiTokenInstance(e.target.value)}
             required
           />
         </label>
@@ -63,7 +67,12 @@ export function Login({ initial, busy, error, onSubmit }: Props) {
           <summary>Адрес API</summary>
           <label className="field">
             <span className="field__label">apiUrl</span>
-            <input className="field__input" value={apiUrl} onChange={e => setApiUrl(e.target.value)} placeholder={DEFAULT_API_URL} />
+            <input
+              className="field__input"
+              value={apiUrl}
+              onChange={(e) => setApiUrl(e.target.value)}
+              placeholder={DEFAULT_API_URL}
+            />
           </label>
         </details>
 
@@ -74,5 +83,5 @@ export function Login({ initial, busy, error, onSubmit }: Props) {
         </button>
       </form>
     </div>
-  )
+  );
 }

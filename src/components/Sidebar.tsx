@@ -1,40 +1,49 @@
-import { useState } from 'react'
-import type { FormEvent } from 'react'
-import type { Chat, Message } from '../state/chats'
-import { Avatar } from './Avatar'
-import { LogoutIcon, PlusIcon } from './Icons'
-import { formatTime } from '../format'
+import { useState } from 'react';
+import type { FormEvent } from 'react';
+import type { Chat, Message } from '../state/chats';
+import { Avatar } from './Avatar';
+import { LogoutIcon, PlusIcon } from './Icons';
+import { formatTime } from '../format';
 
 interface Props {
-  idInstance: string
-  chats: Chat[]
-  lastMessages: Record<string, Message | undefined>
-  selectedKey: string | null
-  connectionError: string | null
-  onSelect: (key: string) => void
-  onCreate: (phone: string) => void
-  onLogout: () => void
+  idInstance: string;
+  chats: Chat[];
+  lastMessages: Record<string, Message | undefined>;
+  selectedKey: string | null;
+  connectionError: string | null;
+  onSelect: (key: string) => void;
+  onCreate: (phone: string) => void;
+  onLogout: () => void;
 }
 
-export function Sidebar({ idInstance, chats, lastMessages, selectedKey, connectionError, onSelect, onCreate, onLogout }: Props) {
-  const [phone, setPhone] = useState('')
-  const [creating, setCreating] = useState(false)
-  const [phoneError, setPhoneError] = useState<string | null>(null)
+export function Sidebar({
+  idInstance,
+  chats,
+  lastMessages,
+  selectedKey,
+  connectionError,
+  onSelect,
+  onCreate,
+  onLogout,
+}: Props) {
+  const [phone, setPhone] = useState('');
+  const [creating, setCreating] = useState(false);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
 
   const submit = (e: FormEvent) => {
-    e.preventDefault()
-    let digits = phone.replace(/\D/g, '')
-    if (digits.length === 11 && digits.startsWith('8')) digits = `7${digits.slice(1)}`
-    if (digits.length === 10) digits = `7${digits}`
+    e.preventDefault();
+    let digits = phone.replace(/\D/g, '');
+    if (digits.length === 11 && digits.startsWith('8')) digits = `7${digits.slice(1)}`;
+    if (digits.length === 10) digits = `7${digits}`;
     if (digits.length < 10 || digits.length > 15) {
-      setPhoneError('Введите номер в международном формате, например +7 999 123-45-67')
-      return
+      setPhoneError('Введите номер в международном формате, например +7 999 123-45-67');
+      return;
     }
-    onCreate(digits)
-    setPhone('')
-    setPhoneError(null)
-    setCreating(false)
-  }
+    onCreate(digits);
+    setPhone('');
+    setPhoneError(null);
+    setCreating(false);
+  };
 
   return (
     <aside className="sidebar">
@@ -52,7 +61,7 @@ export function Sidebar({ idInstance, chats, lastMessages, selectedKey, connecti
             title="Новый чат"
             aria-label="Новый чат"
             aria-expanded={creating}
-            onClick={() => setCreating(v => !v)}
+            onClick={() => setCreating((v) => !v)}
           >
             <PlusIcon />
           </button>
@@ -70,9 +79,9 @@ export function Sidebar({ idInstance, chats, lastMessages, selectedKey, connecti
             autoFocus
             placeholder="Номер телефона получателя"
             value={phone}
-            onChange={e => {
-              setPhone(e.target.value)
-              setPhoneError(null)
+            onChange={(e) => {
+              setPhone(e.target.value);
+              setPhoneError(null);
             }}
           />
           <button type="submit" className="button button--primary">
@@ -90,8 +99,8 @@ export function Sidebar({ idInstance, chats, lastMessages, selectedKey, connecti
             Нажмите <PlusIcon /> и введите номер получателя, чтобы начать переписку
           </li>
         )}
-        {chats.map(chat => {
-          const last = lastMessages[chat.key]
+        {chats.map((chat) => {
+          const last = lastMessages[chat.key];
           return (
             <li key={chat.key}>
               <button
@@ -114,9 +123,9 @@ export function Sidebar({ idInstance, chats, lastMessages, selectedKey, connecti
                 </div>
               </button>
             </li>
-          )
+          );
         })}
       </ul>
     </aside>
-  )
+  );
 }

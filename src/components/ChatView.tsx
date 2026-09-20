@@ -1,47 +1,47 @@
-import { useLayoutEffect, useRef, useState } from 'react'
-import type { KeyboardEvent } from 'react'
-import type { Chat, Message } from '../state/chats'
-import { formatPhone } from '../state/chats'
-import { Avatar } from './Avatar'
-import { BackIcon, CheckIcon, ClockIcon, ErrorIcon, SendIcon } from './Icons'
-import { dayKey, formatDay, formatTime } from '../format'
+import { useLayoutEffect, useRef, useState } from 'react';
+import type { KeyboardEvent } from 'react';
+import type { Chat, Message } from '../state/chats';
+import { formatPhone } from '../state/chats';
+import { Avatar } from './Avatar';
+import { BackIcon, CheckIcon, ClockIcon, ErrorIcon, SendIcon } from './Icons';
+import { dayKey, formatDay, formatTime } from '../format';
 
 interface Props {
-  chat: Chat
-  messages: Message[]
-  onSend: (text: string) => void
-  onBack: () => void
+  chat: Chat;
+  messages: Message[];
+  onSend: (text: string) => void;
+  onBack: () => void;
 }
 
-const MAX_LENGTH = 4000
+const MAX_LENGTH = 4000;
 
 export function ChatView({ chat, messages, onSend, onBack }: Props) {
-  const [text, setText] = useState('')
-  const listRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLTextAreaElement>(null)
+  const [text, setText] = useState('');
+  const listRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useLayoutEffect(() => {
-    const el = listRef.current
-    if (el) el.scrollTop = el.scrollHeight
-  }, [messages, chat.key])
+    const el = listRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages, chat.key]);
 
   const send = () => {
-    const trimmed = text.trim()
-    if (!trimmed) return
-    onSend(trimmed.slice(0, MAX_LENGTH))
-    setText('')
-    inputRef.current?.focus()
-  }
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    onSend(trimmed.slice(0, MAX_LENGTH));
+    setText('');
+    inputRef.current?.focus();
+  };
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      send()
+      e.preventDefault();
+      send();
     }
-  }
+  };
 
-  const subtitle = chat.phone ? formatPhone(chat.phone) : chat.chatId
-  const showSubtitle = subtitle !== chat.name
+  const subtitle = chat.phone ? formatPhone(chat.phone) : chat.chatId;
+  const showSubtitle = subtitle !== chat.name;
 
   return (
     <section className="chat">
@@ -59,7 +59,7 @@ export function ChatView({ chat, messages, onSend, onBack }: Props) {
       <div className="chat__messages" ref={listRef}>
         {messages.length === 0 && <div className="chat__empty">Напишите первое сообщение</div>}
         {messages.map((m, i) => {
-          const newDay = i === 0 || dayKey(messages[i - 1].timestamp) !== dayKey(m.timestamp)
+          const newDay = i === 0 || dayKey(messages[i - 1].timestamp) !== dayKey(m.timestamp);
           return (
             <div key={m.id} className="chat__group">
               {newDay && <div className="chat__day">{formatDay(m.timestamp)}</div>}
@@ -72,7 +72,7 @@ export function ChatView({ chat, messages, onSend, onBack }: Props) {
                 {m.error && <div className="bubble__error">Не отправлено: {m.error}</div>}
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -85,7 +85,7 @@ export function ChatView({ chat, messages, onSend, onBack }: Props) {
           autoFocus
           maxLength={MAX_LENGTH}
           value={text}
-          onChange={e => setText(e.target.value)}
+          onChange={(e) => setText(e.target.value)}
           onKeyDown={onKeyDown}
         />
         <button type="button" className="composer__send" aria-label="Отправить" disabled={!text.trim()} onClick={send}>
@@ -93,24 +93,24 @@ export function ChatView({ chat, messages, onSend, onBack }: Props) {
         </button>
       </footer>
     </section>
-  )
+  );
 }
 
 function Status({ status }: { status: Message['status'] }) {
   switch (status) {
     case 'sending':
-      return <ClockIcon />
+      return <ClockIcon />;
     case 'delivered':
-      return <CheckIcon double />
+      return <CheckIcon double />;
     case 'read':
       return (
         <span className="bubble__read">
           <CheckIcon double />
         </span>
-      )
+      );
     case 'error':
-      return <ErrorIcon />
+      return <ErrorIcon />;
     default:
-      return <CheckIcon />
+      return <CheckIcon />;
   }
 }

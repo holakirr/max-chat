@@ -41,9 +41,11 @@ npm run dev        # http://localhost:5173
 Прочие команды:
 
 ```bash
-npm run build      # проверка типов и сборка в dist/
-npm run lint       # oxlint
-npm run preview    # раздача собранного dist/
+npm run build         # проверка типов и сборка в dist/
+npm run lint          # oxlint
+npm run format        # biome format --write (настройки в biome.json)
+npm run format:check
+npm run preview       # раздача собранного dist/
 ```
 
 Через Docker (nginx со статикой на http://localhost:3300):
