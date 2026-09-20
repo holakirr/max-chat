@@ -11,6 +11,9 @@
   "[json]": { "editor.defaultFormatter": "biomejs.biome" },
   "[jsonc]": { "editor.defaultFormatter": "biomejs.biome" },
   "prettier.enable": false,
+  // tsserver редактора — TypeScript из проекта (6.x), а не из расширения «TypeScript Nightly» 2023 года.
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
   "javascript.format.semicolons": "insert",
   "typescript.format.semicolons": "insert"
 }
